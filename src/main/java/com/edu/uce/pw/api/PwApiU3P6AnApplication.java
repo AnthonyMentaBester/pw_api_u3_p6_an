@@ -1,4 +1,4 @@
-package com.edu.ec.pw.api;
+package com.edu.uce.pw.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
