@@ -28,13 +28,25 @@ public class Estudiante {
  
 	@Column(name = "estu_fecha_nacimiento")
 	private LocalDateTime fechaNacimiento;
+	@Column(name = "estu_genero")
+	private String genero;
  
 	// GET Y SET
  
+	
+	
 	public Integer getId() {
 		return id;
 	}
  
+	public String getGenero() {
+		return genero;
+	}
+
+	public void setGenero(String genero) {
+		this.genero = genero;
+	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
