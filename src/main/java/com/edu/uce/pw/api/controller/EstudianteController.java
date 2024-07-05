@@ -25,6 +25,7 @@ public class EstudianteController {
 	
 	@Autowired
 	private IEstudianteService estudianteService;
+	
 	//http://localhost:8080/API/v1.0/Matricula/estudiantes/guardar
 	//NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes
 	@PostMapping
@@ -85,29 +86,38 @@ public class EstudianteController {
 	//http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar/5/nuevo/prueba
 	//NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/5
 	@GetMapping(path = "/{id}")
-	public Estudiante buscar(@PathVariable Integer id) {
+	public Estudiante buscarPorId(@PathVariable Integer id) {
 
 		return this.estudianteService.buscar(id);
 		
 	}
 	//los request param para el valor uso ? siempre al final
 	//http://localhost:8080/API/v1.0/Matricula/estudiantes/buscarGenero?genero=M&edad=24
-	@GetMapping(path = "/buscarGenero")
-	public List<Estudiante> buscarGenero(@RequestParam String genero,@RequestParam Integer edad){
-		System.out.println("Edad: " + edad);
+	//NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/genero?genero=M
+	@GetMapping(path = "/genero")
+	public List<Estudiante> buscarGenero(@RequestParam String genero){
 		List<Estudiante> lista = this.estudianteService.buscarGenero(genero);
 		return lista;
 		
 	}
 	
 	//http://localhost:8080/API/v1.0/Matricula/estudiantes/buscarMixto/5?prueba=HolaMundo
-	@GetMapping(path = "/buscarMixto/{id}")
+	//NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/mixto/5?prueba=HolaMundo
+	@GetMapping(path = "/mixto/{id}")
 	public Estudiante buscarMixto(@PathVariable Integer id,@RequestParam String prueba) {
 		System.out.println("Dato:" + id);
 		System.out.println("Dato:" + prueba);
-		return this.estudianteService.buscar(id);
+		return this.estudianteService.buscar(id); 
 			
 	}
+	
+	//NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/test/4
+	@GetMapping(path = "/test/{id}")
+	public Estudiante test(@PathVariable Integer id, @RequestBody Estudiante est) {
+		System.out.println(est);
+		return this.estudianteService.buscar(id);
+	}
+	
 	
 	
 

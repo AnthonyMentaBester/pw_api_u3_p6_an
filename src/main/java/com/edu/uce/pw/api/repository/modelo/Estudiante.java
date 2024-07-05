@@ -35,10 +35,17 @@ public class Estudiante {
  
 	
 	
+	
 	public Integer getId() {
 		return id;
 	}
  
+	@Override
+	public String toString() {
+		return "Estudiante [id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", fechaNacimiento="
+				+ fechaNacimiento + ", genero=" + genero + "]";
+	}
+
 	public String getGenero() {
 		return genero;
 	}
