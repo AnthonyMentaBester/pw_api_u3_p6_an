@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,31 +30,33 @@ public class EstudianteController {
 	//http://localhost:8080/API/v1.0/Matricula/estudiantes/guardar
 	//NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes
 	@PostMapping
-	public void guardar(@RequestBody Estudiante est) {
+	public ResponseEntity<Estudiante> guardar(@RequestBody Estudiante est) {
 		//Estudiante est = new Estudiante();
 		//est.setNombre("anthony");
 		//est.setApellido("narvaez");
 		//est.setFechaNacimiento(LocalDateTime.of(1999, 8, 11, 5, 50));
 		
 		this.estudianteService.guardar(est);
-		
+		return ResponseEntity.status(201).body(est);
+		 
 	}
 	//http://localhost:8080/API/v1.0/Matricula/estudiantes/actualizar
 	//NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/6
 	@PutMapping(path = "/{id}")
-	public void actualizar(@RequestBody Estudiante est,@PathVariable Integer id) {
+	public ResponseEntity<Estudiante> actualizar(@RequestBody Estudiante est,@PathVariable Integer id) {
 		est.setId(id);
 		//Estudiante est = this.estudianteService.buscar(2);
 		//est.setNombre("daniel");
 		//est.setApellido("teran");
 		//est.setFechaNacimiento(LocalDateTime.now());
 		this.estudianteService.actualizar(est);
+		return ResponseEntity.status(238).body(est);
 		
 	}
 	//http://localhost:8080/API/v1.0/Matricula/estudiantes/actualizarParcial
 	//NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/6
 	@PatchMapping(path = "/{id}")
-	public void actualizarParcial(@RequestBody Estudiante est,@PathVariable Integer id) {
+	public ResponseEntity<Estudiante> actualizarParcial(@RequestBody Estudiante est,@PathVariable Integer id) {
 		est.setId(id);
 		Estudiante est2 = this.estudianteService.buscar(est.getId());
 		
@@ -69,6 +72,7 @@ public class EstudianteController {
 		}
 		//est.setNombre("carlos");
 		this.estudianteService.actualizar(est2);
+		return ResponseEntity.status(239).body(est2);
 		
 	}
 	//http://localhost:8080/API/v1.0/Matricula/estudiantes/borrar
@@ -77,18 +81,20 @@ public class EstudianteController {
 	
 	//NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/3
 	@DeleteMapping(path = "/{id}")
-	public void borrar(@PathVariable Integer id) {
+	public ResponseEntity<String> borrar(@PathVariable Integer id) {
 		System.out.println("Borrar");
 		this.estudianteService.borrar(id);
+		return ResponseEntity.status(240).body("borrado");
 		
 	}
 	//http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
 	//http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar/5/nuevo/prueba
 	//NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/5
 	@GetMapping(path = "/{id}")
-	public Estudiante buscarPorId(@PathVariable Integer id) {
+	public ResponseEntity<Estudiante> buscarPorId(@PathVariable Integer id) {
 
-		return this.estudianteService.buscar(id);
+		
+		return ResponseEntity.status(236).body(this.estudianteService.buscar(id));
 		
 	}
 	//los request param para el valor uso ? siempre al final
