@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +32,7 @@ public class EstudianteController {
 
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/guardar
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes
-	@PostMapping
+	@PostMapping(produces = "application/json", consumes = "application/xml")
 	public ResponseEntity<Estudiante> guardar(@RequestBody Estudiante est) {
 		// Estudiante est = new Estudiante();
 		// est.setNombre("anthony");
@@ -38,13 +40,16 @@ public class EstudianteController {
 		// est.setFechaNacimiento(LocalDateTime.of(1999, 8, 11, 5, 50));
 
 		this.estudianteService.guardar(est);
-		return ResponseEntity.status(201).body(est);
+		//return ResponseEntity.status(201).body(est);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_201", "Corresponde a la agregacion del recurso");
+		return new ResponseEntity<>(est,cabeceras,201 );
 
 	}
 
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/actualizar
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/6
-	@PutMapping(path = "/{id}")
+	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Estudiante> actualizar(@RequestBody Estudiante est, @PathVariable Integer id) {
 		est.setId(id);
 		// Estudiante est = this.estudianteService.buscar(2);
@@ -52,13 +57,16 @@ public class EstudianteController {
 		// est.setApellido("teran");
 		// est.setFechaNacimiento(LocalDateTime.now());
 		this.estudianteService.actualizar(est);
-		return ResponseEntity.status(238).body(est);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_238", "Corresponde a la actualizacion del recurso.");
+		return new ResponseEntity<>(est,cabeceras,238);
+		//return ResponseEntity.status(238).body(estudiante);
 
 	}
 
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/actualizarParcial
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/6
-	@PatchMapping(path = "/{id}")
+	@PatchMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Estudiante> actualizarParcial(@RequestBody Estudiante est, @PathVariable Integer id) {
 		est.setId(id);
 		Estudiante est2 = this.estudianteService.buscar(est.getId());
@@ -74,8 +82,10 @@ public class EstudianteController {
 
 		}
 		// est.setNombre("carlos");
-		this.estudianteService.actualizar(est2);
-		return ResponseEntity.status(239).body(est2);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_239", "Corresponde a la actualizacion parcial del recurso.");
+		return new ResponseEntity<>(est2,cabeceras,239 );
+		//return ResponseEntity.status(239).body(estudiante2);
 
 	}
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/borrar
@@ -83,57 +93,78 @@ public class EstudianteController {
 	// aqui la debo anotar cuidado con el elemento se debe buscar
 
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/3
-	@DeleteMapping(path = "/{id}")
+	@DeleteMapping(path = "/{id}",produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> borrar(@PathVariable Integer id) {
 		System.out.println("Borrar");
-		this.estudianteService.borrar(id);
-		return ResponseEntity.status(240).body("borrado");
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_240", "Corresponde a la eliminacion del recurso.");
+		return new ResponseEntity<>("Borrado",cabeceras,240);		
+		//return ResponseEntity.status(240).body("Borrado");
 
 	}
 
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar/5/nuevo/prueba
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/5
-	@GetMapping(path = "/{id}")
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Estudiante> buscarPorId(@PathVariable Integer id) {
 
 		// return ResponseEntity.status(236).body(this.estudianteService.buscar(id));
 
 		// CUANDO QUIERO MANDAR COMO CABECERA
 		// estas se manejan por clave valor son registros
-		HttpHeaders cabecera = new HttpHeaders();
-		cabecera.add("mensaje_236", "Corresponde a la consulta de un recurso");
-		cabecera.add("valor", "Estudiante encontrado");
-		return new ResponseEntity<>(this.estudianteService.buscar(id), cabecera, 236);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_236", "Corresponde a la consulta de un recurso");
+		cabeceras.add("valor", "Estudiante encontrado");
+		return new ResponseEntity<>(this.estudianteService.buscar(id), cabeceras, 236);
 
 	}
 
 	// los request param para el valor uso ? siempre al final
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscarGenero?genero=M&edad=24
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/genero?genero=M
-	@GetMapping(path = "/genero")
-	public List<Estudiante> buscarGenero(@RequestParam String genero) {
+	@GetMapping(path = "/genero", consumes = MediaType.APPLICATION_XML_VALUE)
+	public ResponseEntity<List<Estudiante>> buscarGenero(@RequestParam String genero) {
 		List<Estudiante> lista = this.estudianteService.buscarGenero(genero);
-		return lista;
+		//return lista;		
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_236", "Corresponde a la consulta del recurso.");
+		cabeceras.add("Valor ", "Estudiante encontrado");
+		return new ResponseEntity<>(lista,cabeceras,236 );
 
 	}
 
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscarMixto/5?prueba=HolaMundo
 	// NIVEL 1:
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/mixto/5?prueba=HolaMundo
-	@GetMapping(path = "/mixto/{id}")
-	public Estudiante buscarMixto(@PathVariable Integer id, @RequestParam String prueba) {
+	@GetMapping(path = "/mixto/{id}", consumes = MediaType.APPLICATION_XML_VALUE)
+	public ResponseEntity<Estudiante> buscarMixto(@PathVariable Integer id, @RequestParam String prueba) {
 		System.out.println("Dato:" + id);
 		System.out.println("Dato:" + prueba);
-		return this.estudianteService.buscar(id);
+		//return this.estudianteService.buscar(id);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_236", "Corresponde a la consulta mixta del recurso.");
+		cabeceras.add("Valor ", "Estudiante encontrado");
+		return new ResponseEntity<>(this.estudianteService.buscar(id),cabeceras,236 );
 
 	}
 
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/test/4
 	@GetMapping(path = "/test/{id}")
-	public Estudiante test(@PathVariable Integer id, @RequestBody Estudiante est) {
+	public ResponseEntity<Estudiante> test(@PathVariable Integer id, @RequestBody Estudiante est) {
 		System.out.println(est);
-		return this.estudianteService.buscar(id);
+		//return this.estudianteService.buscar(id);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_236", "Corresponde a la consulta test del recurso.");
+		cabeceras.add("Valor ", "Estudiante encontrado");
+		return new ResponseEntity<>(this.estudianteService.buscar(id),cabeceras,236 );
+	}
+	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/texto/plano
+	@GetMapping(path = "/texto/plano")
+	public String prueba() {
+		String prueba = "TEXTO DE PRUEBA";
+		return prueba;
+		
 	}
 
 }
