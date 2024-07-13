@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class MateriaController {
 
 	// http://localhost:8080/API/v1.0/Matricula/materias/guardar
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/materias
-	@PostMapping
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Materia> guardar(@RequestBody Materia mat) {
 		/*
 		 * { "mat_id": 1, "mat_nombre": "nombre", "mat_horas": 0, "mat_creditos":
@@ -47,7 +48,7 @@ public class MateriaController {
 
 	// http://localhost:8080/API/v1.0/Matricula/materias/actualizar
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/materias/1
-	@PutMapping(path = "/{id}")
+	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Materia> actualizar(@RequestBody Materia mat, @PathVariable Integer id) {
 		mat.setId(id);
 		this.materiaService.actualizar(mat);
@@ -59,7 +60,7 @@ public class MateriaController {
 
 	// http://localhost:8080/API/v1.0/Matricula/materias/actualizarParcial
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/materias/1
-	@PatchMapping(path = "/{id}")
+	@PatchMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Materia> actualizarParcial(@RequestBody Materia mat, @PathVariable Integer id) {
 		mat.setId(id);
 		Materia mat2 = this.materiaService.buscar(mat.getId());
@@ -87,7 +88,7 @@ public class MateriaController {
 	// http://localhost:8080/API/v1.0/Matricula/materias/borrar
 	// http://localhost:8080/API/v1.0/Matricula/materias/borrar/3
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/materias/1
-	@DeleteMapping(path = "/{id}")
+	@DeleteMapping(path = "/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> borrar(@PathVariable Integer id) {
 		System.out.println("Borrar");
 		this.materiaService.borrar(id);
@@ -100,7 +101,7 @@ public class MateriaController {
 	// http://localhost:8080/API/v1.0/Matricula/materias/buscar
 	// http://localhost:8080/API/v1.0/Matricula/materias/buscar/5
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/materias/1
-	@GetMapping(path = "/{id}")
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Materia> buscarPorId(@PathVariable Integer id) {
 		//return this.materiaService.buscar(id);
 		HttpHeaders cabeceras = new HttpHeaders();
@@ -112,7 +113,7 @@ public class MateriaController {
 	// http://localhost:8080/API/v1.0/Matricula/materias/buscarMateria/nombre
 	// NIVEL 1:
 	// http://localhost:8080/API/v1.0/Matricula/materias/materia?nombre=Programacion
-	@GetMapping(path = "/materia")
+	@GetMapping(path = "/materia", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<List<Materia>> buscarMateria(@RequestParam String nombre) {
 		List<Materia> lista = this.materiaService.buscarMateria(nombre);
 		//return lista;
@@ -125,7 +126,7 @@ public class MateriaController {
 
 	// NIVEL 1:
 	// http://localhost:8080/API/v1.0/Matricula/materias/mixto/2?prueba=MateriasActivas
-	@GetMapping(path = "/mixto/{id}")
+	@GetMapping(path = "/mixto/{id}",produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Materia> buscarMixto(@PathVariable Integer id, @RequestParam String prueba) {
 		System.out.println("Dato:" + id);
 		System.out.println("Dato:" + prueba);

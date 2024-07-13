@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edu.uce.pw.api.repository.modelo.Estudiante;
 import com.edu.uce.pw.api.service.IEstudianteService;
+import com.edu.uce.pw.api.service.IMateriaService;
+import com.edu.uce.pw.api.service.to.EstudianteTO;
+import com.edu.uce.pw.api.service.to.MateriaTO;
 
 @RestController
 //pasa a ser un recurso
@@ -29,6 +32,9 @@ public class EstudianteController {
 
 	@Autowired
 	private IEstudianteService estudianteService;
+	
+	@Autowired
+	private IMateriaService materiaService;
 
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/guardar
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes
@@ -66,7 +72,7 @@ public class EstudianteController {
 
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/actualizarParcial
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/6
-	@PatchMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
+	@PatchMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Estudiante> actualizarParcial(@RequestBody Estudiante est, @PathVariable Integer id) {
 		est.setId(id);
 		Estudiante est2 = this.estudianteService.buscar(est.getId());
@@ -93,7 +99,7 @@ public class EstudianteController {
 	// aqui la debo anotar cuidado con el elemento se debe buscar
 
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/3
-	@DeleteMapping(path = "/{id}",produces = MediaType.TEXT_PLAIN_VALUE)
+	@DeleteMapping(path = "/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> borrar(@PathVariable Integer id) {
 		System.out.println("Borrar");
 		HttpHeaders cabeceras = new HttpHeaders();
@@ -106,7 +112,7 @@ public class EstudianteController {
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar/5/nuevo/prueba
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/5
-	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Estudiante> buscarPorId(@PathVariable Integer id) {
 
 		// return ResponseEntity.status(236).body(this.estudianteService.buscar(id));
@@ -123,7 +129,7 @@ public class EstudianteController {
 	// los request param para el valor uso ? siempre al final
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscarGenero?genero=M&edad=24
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/genero?genero=M
-	@GetMapping(path = "/genero", consumes = MediaType.APPLICATION_XML_VALUE)
+	@GetMapping(path = "/genero", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<List<Estudiante>> buscarGenero(@RequestParam String genero) {
 		List<Estudiante> lista = this.estudianteService.buscarGenero(genero);
 		//return lista;		
@@ -137,7 +143,7 @@ public class EstudianteController {
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscarMixto/5?prueba=HolaMundo
 	// NIVEL 1:
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/mixto/5?prueba=HolaMundo
-	@GetMapping(path = "/mixto/{id}", consumes = MediaType.APPLICATION_XML_VALUE)
+	@GetMapping(path = "/mixto/{id}", produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Estudiante> buscarMixto(@PathVariable Integer id, @RequestParam String prueba) {
 		System.out.println("Dato:" + id);
 		System.out.println("Dato:" + prueba);
@@ -150,7 +156,7 @@ public class EstudianteController {
 	}
 
 	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/test/4
-	@GetMapping(path = "/test/{id}")
+	@GetMapping(path = "/test/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Estudiante> test(@PathVariable Integer id, @RequestBody Estudiante est) {
 		System.out.println(est);
 		//return this.estudianteService.buscar(id);
@@ -166,5 +172,14 @@ public class EstudianteController {
 		return prueba;
 		
 	}
+	
+	// NIVEL 1: http://localhost:8080/API/v1.0/Matricula/estudiantes/hateos/8
+	@GetMapping(path = "/hateos/{id}")
+	public EstudianteTO buscarHateos(@PathVariable Integer id) {
+		EstudianteTO est = this.estudianteService.buscarPorId(id);
+		List<MateriaTO> lista = this.materiaService.buscarPorEstudiante(id);
+		return est;
+	}
+	
 
 }

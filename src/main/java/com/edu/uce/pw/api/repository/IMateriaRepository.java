@@ -16,5 +16,7 @@ public interface IMateriaRepository {
 		public void insertar(Materia materia);
 		
 		List<Materia> seleccionarMateria(String nombre);
+		
+		List<Materia> seleccionarPorEstudiante(Integer id);
 
 }

@@ -1,5 +1,6 @@
 package com.edu.uce.pw.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,14 @@ import org.springframework.stereotype.Service;
 import com.edu.uce.pw.api.repository.IEstudianteRepository;
 import com.edu.uce.pw.api.repository.IMateriaRepository;
 import com.edu.uce.pw.api.repository.modelo.Materia;
+import com.edu.uce.pw.api.service.to.MateriaTO;
 
 import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
 public class MateriaServiceImpl implements IMateriaService {
+	
 	@Autowired
 	private IMateriaRepository materiaRespository;
 	
@@ -46,6 +49,38 @@ public class MateriaServiceImpl implements IMateriaService {
 		// TODO Auto-generated method stub
 		return this.materiaRespository.seleccionarMateria(materia);
 	}
+
+	@Override
+	public List<MateriaTO> buscarPorEstudiante(Integer id) {
+		// TODO Auto-generated method stub
+		List<Materia> lista = this.materiaRespository.seleccionarPorEstudiante(id);
+		List<MateriaTO> listafinal = new ArrayList<>();
+		for (Materia mat : lista) {
+			listafinal.add(this.convertir(mat));
+			
+		}
+		return listafinal;
+	}
+
+	public MateriaTO convertir(Materia mat) {
+		// TODO Auto-generated method stub
+		MateriaTO mateTO = new MateriaTO();
+		mateTO.setCreditos(mat.getCreditos());
+		mateTO.setHoras(mat.getHoras());
+		mateTO.setId(mat.getId());
+		mateTO.setNivel(mat.getNivel());
+		mateTO.setNombre(mat.getNombre());
+		
+		return mateTO;
+	}
+
+	//@Override
+	//public Materia buscarPorId(Integer id) {
+		// TODO Auto-generated method stub
+		//return this.materiaRespository.seleccionar(id);
+	//}
+	
+	
  
 
 }
