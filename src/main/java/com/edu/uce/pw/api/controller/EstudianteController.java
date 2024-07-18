@@ -198,6 +198,14 @@ public class EstudianteController {
 		return this.materiaService.buscarPorEstudiante(id);
 		
 	}
+
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    	public ResponseEntity<List<Estudiante>> buscarTodos() {
+        List<Estudiante> lista = this.estudianteService.buscarTodos();
+        HttpHeaders cabeceras = new HttpHeaders();
+        cabeceras.add("mensaje_236", "Corresponde a la consulta de todos los estudiantes.");
+        return new ResponseEntity<>(lista, cabeceras, 236);
+    }
 	
 
 }
